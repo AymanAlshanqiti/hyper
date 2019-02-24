@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Restaurant Detail
+{% endblock title %}
+
+
+{% block content %}
+	
+
+	<div class="row my-3">
+		<div class="col-12 text-center">
+
+			<div class="card">
+				{% if restaurant.logo %}
+					<img src="{{restaurant.logo.url}}" class="card-img-top" alt="{{restaurant.logo}} logo">
+				{% endif %}
+				<div class="card-body">
+					<h5 class="card-title">{{restaurant.name}}</h5>
+					<p class="card-text">{{restaurant.status}}</p>
+					{% if restaurant.is_active == 1 %}
+						<p class="card-text">Active Restaurant</p>
+					{% else %}
+						<p class="card-text">Not Active Restaurant</p>
+					{% endif %}
+					<p class="card-text">Created at: {{restaurant.created_at}}</p>
+					<p class="card-text">Last update: {{restaurant.updated_at}}</p>
+					<p class="card-text">The owner: {{restaurant.owner}}</p>
+					<a href="{% url 'restaurants-list' %}" class="btn btn-outline-secondary">Back</a>
+
+					{% if request.user.is_authenticated and restaurant.owner == request.user %}
+						<a href="{% url 'item-create' restaurant.id %}" class="btn btn-outline-secondary">Add item</a>
+						<a href="{% url 'restaurant-update' restaurant.id %}" class="btn btn-outline-secondary">Update restaurant info</a>
+						<a href="{% url 'restaurant-delete' restaurant.id %}" class="btn btn-danger">Delete restaurant</a>
+					{% endif %}
+				</div>
+			</div>
+
+			<h1 class="my-4">Items List</h1>
+
+			<table class="table table-hover my-4">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col"></th>
+						<th scope="col">name</th>
+						<th scope="col">description</th>
+						<th scope="col">price</th>
+						<th scope="col">is active</th>
+						{% if request.user.is_authenticated and restaurant.owner == request.user %}
+							<th scope="col">Operations</th>
+						{% endif %}
+					</tr>
+				</thead>
+				<tbody>
+					
+					{% for item in restaurant.items.all %}
+						<tr>
+							<th scope="col">{{item.id}}</th>
+							<td scope="col">
+								{% if item.pic %}
+									<img src="{{item.pic.url}}" class="rounded float-left item-pic" alt="...">
+								{% endif %}
+							</td>
+							<td scope="col">{{item.name}}</td>
+							<td scope="col">{{item.description}}</td>
+							<td scope="col">{{item.price}}</td>
+							{% if item.is_active == 1 %}
+								<td scope="col">Active</td>
+							{% else %}
+								<td scope="col">Not active</td>
+							{% endif %}
+
+							{% if request.user.is_authenticated and restaurant.owner == request.user %}
+								<th scope="col">
+									<a href="{% url 'item-update' item.id %}" class="btn btn-outline-secondary">Update</a>
+									<a href="{% url 'item-delete' item.id %}" class="btn btn-danger">Delete</a>
+								</th>	
+							{% endif %}
+							
+
+						</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+
+{% endblock content %}

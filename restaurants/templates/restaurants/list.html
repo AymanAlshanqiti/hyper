@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Restaurants List
+{% endblock title %}
+
+
+{% block content %}
+	
+
+	<div class="row my-3">
+
+			{% for restaurant in restaurants %}
+				<div class="col-4 my-3 text-center">
+				
+					<div class="card">
+						{% if restaurant.logo %}
+							<img src="{{restaurant.logo.url}}" class="card-img-top" alt="{{restaurant.logo}} logo">
+						{% endif %}
+						
+						<div class="card-body">
+							<h5 class="card-title">{{restaurant.name}}</h5>
+							<p class="card-text">{{restaurant.status}}</p>
+							<p class="card-text">Created by: {{restaurant.owner}}</p>
+							<a href="{% url 'restaurant-detail' restaurant.id %}" class="btn btn-outline-secondary">See the detail</a>
+						</div>
+					</div>
+
+				</div>
+			{% endfor %}
+
+
+	</div>
+
+
+{% endblock content %}
